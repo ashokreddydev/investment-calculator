@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Cashback Investment Calculator</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 800px; margin: auto; }
+    input { margin: 6px 0; padding: 6px; width: 200px; }
+    button { padding: 10px 20px; margin-top: 10px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
+    th { background-color: #f0f0f0; }
+    tr:nth-child(even) { background-color: #fafafa; }
+    .summary { margin-top: 20px; font-weight: bold; font-size: 18px; }
+    h2 { margin-bottom: 10px; }
+    label { display: block; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>📊 Cashback Investment Calculator</h2>
+
+<label>💰 Yearly Investment (₹): <input type="number" id="investment" value="200000" /></label>
+<label>🎁 Annual Cashback (₹): <input type="number" id="cashback" value="83000" /></label>
+<label>📆 Investment Duration (Years): <input type="number" id="investYears" value="12" /></label>
+<label>🧮 Total Plan Duration (Years): <input type="number" id="totalYears" value="30" /></label>
+<label>📈 Annual Interest Rate (%): <input type="number" id="rate" value="8" /></label>
+
+<button onclick="calculate()">Calculate</button>
+
+<table id="resultTable">
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Start Balance</th>
+      <th>Investment</th>
+      <th>Cashback</th>
+      <th>Interest</th>
+      <th>End Balance</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="summary" id="summary"></div>
+
+<script>
+function formatINR(value) {
+  return "₹" + value.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+
+function calculate() {
+  const investment = parseFloat(document.getElementById('investment').value);
+  const cashback = parseFloat(document.getElementById('cashback').value);
+  const investYears = parseInt(document.getElementById('investYears').value);
+  const totalYears = parseInt(document.getElementById('totalYears').value);
+  const rate = parseFloat(document.getElementById('rate').value) / 100;
+
+  let balance = 0;
+  let totalInvest = 0, totalCashback = 0, totalInterest = 0;
+
+  const tbody = document.querySelector("#resultTable tbody");
+  const summary = document.getElementById("summary");
+  tbody.innerHTML = "";
+
+  for (let year = 1; year <= totalYears; year++) {
+    const startBalance = balance;
+    const invest = year <= investYears ? investment : 0;
+    const cb = year >= 2 ? cashback : 0;
+    const interest = (startBalance + invest - cb) * rate;
+    balance = startBalance + invest - cb + interest;
+
+    totalInvest += invest;
+    totalCashback += cb;
+    totalInterest += interest;
+
+    const row = `<tr>
+      <td>${year}</td>
+      <td>${formatINR(startBalance)}</td>
+      <td>${formatINR(invest)}</td>
+      <td>${formatINR(cb)}</td>
+      <td>${formatINR(interest)}</td>
+      <td>${formatINR(balance)}</td>
+    </tr>`;
+    tbody.innerHTML += row;
+  }
+
+  // Add total row at the bottom
+  const totalRow = `<tr style="font-weight:bold; background-color: #e8f4ff;">
+    <td>Total</td>
+    <td>—</td>
+    <td>${formatINR(totalInvest)}</td>
+    <td>${formatINR(totalCashback)}</td>
+    <td>${formatINR(totalInterest)}</td>
+    <td>${formatINR(balance)}</td>
+  </tr>`;
+  tbody.innerHTML += totalRow;
+
+  summary.innerHTML = `🧾 Final Balance after ${totalYears} years: <strong>${formatINR(balance)}</strong>`;
+}
+</script>
+
+</body>
+</html>
