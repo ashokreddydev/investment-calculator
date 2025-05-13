@@ -29,19 +29,6 @@ A simple, interactive web tool to estimate long-term returns on investments with
 3. Click on **"Calculate"** to view the year-by-year investment report.
 
 
-
-## 📷 Screenshot
-
-![Cashback Investment Calculator Screenshot](screenshot.png)
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
 ## 🙌 Credits
 
 Developed by [Ashok Reddy](https://github.com/ashokreddydev)
